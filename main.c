@@ -16,7 +16,7 @@ int main(void)
     while(1)
     {
 		BTN_Check();
-		switch (BTN_Read(btn[0]))
+		switch (BTN_Read(0))
 		{
 		case BTN_ST_PRES_EV:
 			LED_OUT^=LED1;

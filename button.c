@@ -9,6 +9,8 @@
 
 ISR(TIMER2_OVF_vect)
 {
+	
+	BTN_Calc(0);
 	/*
 	unsigned char f;
 	for (f=0;f<BTN_CNT;f++)
@@ -64,11 +66,6 @@ void BTN_Init(void)
 	BTN_Timer_Init();
 }
 
-void BTN_Calc(void)
-{
-	
-}
-
 void BTN_Check(void)
 {
 	static uint8_t prev_state=BTN_MASK;
@@ -78,52 +75,79 @@ void BTN_Check(void)
 	{
 		if ((chng_state)&BTN1)
 		{
-			BTN_Event(btn[0],last_state&BTN1);
+			BTN_Event(0,last_state&BTN1);
 		}
 		if ((chng_state)&BTN2)
 		{
-			BTN_Event(btn[1],last_state&BTN2);
+			BTN_Event(1,last_state&BTN2);
 		}
 		if ((chng_state)&BTN3)
 		{
-			BTN_Event(btn[2],last_state&BTN3);
+			BTN_Event(2,last_state&BTN3);
 		}
 		if ((chng_state)&BTN4)
 		{
-			BTN_Event(btn[3],last_state&BTN4);
+			BTN_Event(3,last_state&BTN4);
 		}
 	}
 	prev_state=last_state;
 }
 
-void BTN_Event(struct BTN_Data b,uint8_t st)
+void BTN_Event(uint8_t n,uint8_t st)
 {
+	struct BTN_Data *b=&btn[n];
 	uint8_t prs=(!st?1:0);
 	cli();
-	b.press&=~1;
-	b.press|=prs;
+	b->press&=~1;
+	b->press|=prs;
 	sei();
-	switch (b.state)
+	switch (b->state)
 	{
 		case BTN_ST_WAIT:
 		if(prs)
-		b.state=BTN_ST_PRES_EV;
+		{
+			b->state=BTN_ST_PRES_EV;
+		}
 		return;
 
 		case BTN_ST_PRES_LN:
 		if(!prs)
-		b.state=BTN_ST_PRES;
+		{
+			b->state=BTN_ST_PRES;
+			b->count=BTN_PRS;
+		}
 		return;
 	}
 }
 
-uint8_t BTN_Read(struct BTN_Data b)
+void BTN_Calc(uint8_t n)
 {
-	switch (b.state)
+	struct BTN_Data *b=&btn[n];
+	if (b->count!=0)
+	{
+		b->count--;
+		switch (b->state)
+		{
+			case BTN_ST_PRES:
+			if (b->count==0)
+			{
+				LED_OUT^=LED3;
+				b->state=BTN_ST_WAIT;
+			}
+			break;
+		}
+	}
+}
+
+uint8_t BTN_Read(uint8_t n)
+{
+	struct BTN_Data *b=&btn[n];
+	switch (b->state)
 	{
 		case BTN_ST_PRES_EV:
-			b.state=BTN_ST_PRES;
-			b.count=BTN_PRS;
+			LED_OUT^=LED4;
+			b->state=BTN_ST_PRES;
+			b->count=BTN_PRS;
 		return BTN_ST_PRES_EV;
 	}		
 		

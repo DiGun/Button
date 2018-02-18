@@ -81,8 +81,9 @@ void BTN_port_setup(void);
 void BTN_Timer_Init(void);
 void BTN_Init(void);
 void BTN_Check(void);
-void BTN_Event(struct BTN_Data b,uint8_t st);
-uint8_t BTN_Read(struct BTN_Data b);
+void BTN_Event(uint8_t n,uint8_t st);
+uint8_t BTN_Read(uint8_t n);
+void BTN_Calc(uint8_t n);
 
 
 #endif /* BUTTON_H_ */
