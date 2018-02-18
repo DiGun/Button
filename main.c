@@ -7,6 +7,7 @@
 
 
 #include <avr/io.h>
+#include <util/delay.h>
 #include "button.h"
 
 int main(void)
@@ -15,6 +16,13 @@ int main(void)
     while(1)
     {
 		BTN_Check();
-        //TODO:: Please write your application code 
+		switch (BTN_Read(btn[0]))
+		{
+		case BTN_ST_PRES_EV:
+			LED_OUT^=LED1;
+			break;
+		}
+        _delay_ms(5);
+		
     }
 }

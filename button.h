@@ -61,9 +61,9 @@
 
 struct BTN_Data 
 {
-	uint8_t press;
-	uint8_t count;
-	uint8_t state;
+	volatile	uint8_t press;
+		uint8_t count;
+	volatile	uint8_t state;
 	/*
 BTN_ST_WAIT		Ожидание
 BTN_ST_PRES_EV	Нажатие зарегистрированно

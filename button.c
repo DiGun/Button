@@ -127,4 +127,5 @@ uint8_t BTN_Read(struct BTN_Data b)
 		return BTN_ST_PRES_EV;
 	}		
 		
+	return BTN_ST_WAIT;	
 }

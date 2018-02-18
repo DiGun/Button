@@ -17,4 +17,6 @@ Backup Of button.pdsbak
 
 Last Loaded button.pdsbak
 
-button.pdsprj.DIGUNER.DiGun.workspace
+*.workspace
+
+*.xml
