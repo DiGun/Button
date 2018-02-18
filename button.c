@@ -9,30 +9,8 @@
 
 ISR(TIMER2_OVF_vect)
 {
-	
+	TCNT2=0x70;
 	BTN_Calc(0);
-	/*
-	unsigned char f;
-	for (f=0;f<BTN_CNT;f++)
-	{
-		if(btn_press[f]==0&&btn_set[f]==0)
-		{
-			switch (btn_count[f])
-			{
-				case 2:
-				btn_set[f]=1;
-				break;
-				case BTN_WAIT:
-				btn_set[f]=1;
-				break;
-				case BTN_WAIT+1:
-				btn_count[f]=BTN_REPEAT;
-				break;
-			}
-			btn_count[f]++;
-		}
-	}
-	*/
 }
 
 inline void BTN_Timer_Init(void)
@@ -113,8 +91,22 @@ void BTN_Event(uint8_t n,uint8_t st)
 		case BTN_ST_PRES_LN:
 		if(!prs)
 		{
-			b->state=BTN_ST_PRES;
-			b->count=BTN_PRS;
+			b->state=BTN_ST_NEXT_CLR;
+			b->count=BTN_AFT_RELIASE;
+		}
+		return;
+		
+		case BTN_ST_NEXT_CLR:
+		if(prs)
+		{
+			uint8_t cnt=b->press>>4;
+			cnt++;
+			b->state=BTN_ST_DOUBLE_EV;
+			b->count=0;
+			cli();
+			b->press&=0xF0;
+			b->press|=cnt<<4;
+			sei();			
 		}
 		return;
 	}
@@ -131,8 +123,32 @@ void BTN_Calc(uint8_t n)
 			case BTN_ST_PRES:
 			if (b->count==0)
 			{
-				LED_OUT^=LED3;
+				if (b->press&1)
+				{
+					b->state=BTN_ST_PRES_LN;
+					b->count=BTN_LONG_PRS;
+				}
+				else
+				{
+					b->state=BTN_ST_NEXT_CLR;
+					b->count=BTN_AFT_RELIASE;
+				}
+			}
+			break;
+			
+			case BTN_ST_PRES_LN:
+			if (b->count==0)
+			{
+				b->state=BTN_ST_PRES_LN_EV;
+				//				LED_OUT^=LED3;
+			}
+			break;
+
+			case BTN_ST_NEXT_CLR:
+			if (b->count==0)
+			{
 				b->state=BTN_ST_WAIT;
+				LED_OUT^=LED4;
 			}
 			break;
 		}
@@ -145,10 +161,18 @@ uint8_t BTN_Read(uint8_t n)
 	switch (b->state)
 	{
 		case BTN_ST_PRES_EV:
-			LED_OUT^=LED4;
 			b->state=BTN_ST_PRES;
 			b->count=BTN_PRS;
 		return BTN_ST_PRES_EV;
+		
+		case BTN_ST_PRES_LN_EV:
+			b->state=BTN_ST_WAIT;
+		return BTN_ST_PRES_LN_EV;
+		
+		case BTN_ST_DOUBLE_EV:
+			b->state=BTN_ST_NEXT_CLR;
+			b->count=BTN_AFT_RELIASE;
+		return BTN_ST_DOUBLE_EV;
 	}		
 		
 	return BTN_ST_WAIT;	

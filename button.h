@@ -32,13 +32,13 @@
 #define BTN_IN4			BTN_GET(BTN4)
 
 
-#define BTN_PRS			20
+#define BTN_PRS			10
 //Время после которого возможно следующее нажатие
 #define BTN_LONG_PRS		150
 //Время после которого кнопка считается нажатой длинным нажатием
-#define BTN_AFT_RELIASE		150
+#define BTN_AFT_RELIASE		200
 //Время после которого регистрируется двойное нажатие
-#define BTN_TIMEOUT		152
+//#define BTN_TIMEOUT		152
 //Время после которого счётчик останавливается
 
 #define BTN_ST_WAIT		0

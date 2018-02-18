@@ -19,8 +19,15 @@ int main(void)
 		switch (BTN_Read(0))
 		{
 		case BTN_ST_PRES_EV:
-			LED_OUT^=LED1;
-			break;
+		LED_OUT^=LED1;
+		break;
+		case BTN_ST_PRES_LN_EV:
+		LED_OUT^=LED2;
+		break;
+		case BTN_ST_DOUBLE_EV:
+		LED_OUT^=LED3;
+		break;
+
 		}
         _delay_ms(5);
 		
