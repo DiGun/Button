@@ -104,7 +104,7 @@ void BTN_Event(uint8_t n,uint8_t st)
 			b->state=BTN_ST_DOUBLE_EV;
 			b->count=0;
 			cli();
-			b->press&=0xF0;
+			b->press&=0x0F;
 			b->press|=cnt<<4;
 			sei();			
 		}
@@ -148,6 +148,7 @@ void BTN_Calc(uint8_t n)
 			if (b->count==0)
 			{
 				b->state=BTN_ST_WAIT;
+				b->press&=0x0F;
 				LED_OUT^=LED4;
 			}
 			break;
