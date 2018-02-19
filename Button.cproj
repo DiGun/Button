@@ -15,7 +15,8 @@
     <AssemblyName>Button</AssemblyName>
     <Name>Button</Name>
     <RootNamespace>Button</RootNamespace>
-    <ToolchainFlavour>Native</ToolchainFlavour>
+    <ToolchainFlavour>
+    </ToolchainFlavour>
     <KeepTimersRunning>true</KeepTimersRunning>
     <OverrideVtor>false</OverrideVtor>
     <OverrideVtorValue>exception_table</OverrideVtorValue>
