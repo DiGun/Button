@@ -82,9 +82,17 @@ void BTN_Event(uint8_t n,uint8_t st)
 	switch (b->state)
 	{
 		case BTN_ST_WAIT:
+		case BTN_ST_NEXT_CLR:
 		if(prs)
 		{
-			b->state=BTN_ST_PRES_EV;
+			uint8_t cnt=b->press>>4;
+			cnt++;
+			cli();
+			b->press&=0x0F;
+			b->press|=cnt<<4;
+			sei();
+			b->state=BTN_ST_PRES;
+			b->count=BTN_PRS;
 		}
 		return;
 
@@ -92,21 +100,7 @@ void BTN_Event(uint8_t n,uint8_t st)
 		if(!prs)
 		{
 			b->state=BTN_ST_NEXT_CLR;
-			b->count=BTN_AFT_RELIASE;
-		}
-		return;
-		
-		case BTN_ST_NEXT_CLR:
-		if(prs)
-		{
-			uint8_t cnt=b->press>>4;
-			cnt++;
-			b->state=BTN_ST_DOUBLE_EV;
-			b->count=0;
-			cli();
-			b->press&=0x0F;
-			b->press|=cnt<<4;
-			sei();			
+			b->count=BTN_AFT_TIMEOUT;
 		}
 		return;
 	}
@@ -118,11 +112,11 @@ void BTN_Calc(uint8_t n)
 	if (b->count!=0)
 	{
 		b->count--;
-		switch (b->state)
+		if (b->count==0)
 		{
-			case BTN_ST_PRES:
-			if (b->count==0)
+			switch (b->state)
 			{
+				case BTN_ST_PRES:
 				if (b->press&1)
 				{
 					b->state=BTN_ST_PRES_LN;
@@ -131,50 +125,45 @@ void BTN_Calc(uint8_t n)
 				else
 				{
 					b->state=BTN_ST_NEXT_CLR;
-					b->count=BTN_AFT_RELIASE;
+					b->count=BTN_AFT_TIMEOUT;
 				}
-			}
-			break;
-			
-			case BTN_ST_PRES_LN:
-			if (b->count==0)
-			{
+				break;
+				
+				case BTN_ST_PRES_LN:
 				b->state=BTN_ST_PRES_LN_EV;
-				//				LED_OUT^=LED3;
-			}
-			break;
+				break;
 
-			case BTN_ST_NEXT_CLR:
-			if (b->count==0)
-			{
-				b->state=BTN_ST_WAIT;
-				b->press&=0x0F;
-				LED_OUT^=LED4;
+				case BTN_ST_NEXT_CLR:
+				b->state=BTN_ST_PRES_EV;
+				break;
 			}
-			break;
 		}
+
 	}
 }
 
 uint8_t BTN_Read(uint8_t n)
 {
 	struct BTN_Data *b=&btn[n];
+	uint8_t cnt;
 	switch (b->state)
 	{
-		case BTN_ST_PRES_EV:
-			b->state=BTN_ST_PRES;
-			b->count=BTN_PRS;
-		return BTN_ST_PRES_EV;
+		//		case BTN_ST_PRES_EV:
+		//		return BTN_ST_PRES_EV;
 		
 		case BTN_ST_PRES_LN_EV:
-			b->state=BTN_ST_WAIT;
+		b->state=BTN_ST_WAIT;
+		b->press&=0x0F;
+		b->state=BTN_ST_WAIT;
+		b->count=0;
 		return BTN_ST_PRES_LN_EV;
 		
-		case BTN_ST_DOUBLE_EV:
-			b->state=BTN_ST_NEXT_CLR;
-			b->count=BTN_AFT_RELIASE;
-		return BTN_ST_DOUBLE_EV;
-	}		
-		
-	return BTN_ST_WAIT;	
+		case BTN_ST_PRES_EV:
+		cnt=b->press>>4;
+		PORTB=cnt;
+		b->press&=0x0F;
+		b->state=BTN_ST_WAIT;
+		return cnt;
+	}
+	return BTN_ST_WAIT;
 }

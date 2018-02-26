@@ -13,18 +13,20 @@
 int main(void)
 {
 	BTN_Init();
+	DDRB=0x0F;
+	PORTB=0x0F;
     while(1)
     {
 		BTN_Check();
 		switch (BTN_Read(0))
 		{
-		case BTN_ST_PRES_EV:
+		case 1:
 		LED_OUT^=LED1;
 		break;
-		case BTN_ST_PRES_LN_EV:
+		case 2:
 		LED_OUT^=LED2;
 		break;
-		case BTN_ST_DOUBLE_EV:
+		case BTN_ST_PRES_LN_EV:
 		LED_OUT^=LED3;
 		break;
 

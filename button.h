@@ -32,11 +32,11 @@
 #define BTN_IN4			BTN_GET(BTN4)
 
 
-#define BTN_PRS			10
+#define BTN_PRS			8
 //Время после которого возможно следующее нажатие
-#define BTN_LONG_PRS		150
+#define BTN_LONG_PRS		200
 //Время после которого кнопка считается нажатой длинным нажатием
-#define BTN_AFT_RELIASE		200
+#define BTN_AFT_TIMEOUT		60
 //Время после которого регистрируется двойное нажатие
 //#define BTN_TIMEOUT		152
 //Время после которого счётчик останавливается
@@ -45,9 +45,8 @@
 #define BTN_ST_PRES_EV	2
 #define BTN_ST_PRES		1
 #define BTN_ST_PRES_LN	3
-#define BTN_ST_PRES_LN_EV	4
 #define BTN_ST_NEXT_CLR		5
-#define BTN_ST_DOUBLE_EV	6
+#define BTN_ST_PRES_LN_EV	255
 
 
 
@@ -69,9 +68,8 @@ BTN_ST_WAIT		Ожидание
 BTN_ST_PRES_EV	Нажатие зарегистрированно
 BTN_ST_PRES		Нажатие не регистрируем (антидребезг)
 BTN_ST_PRES_LN	Долгое нажатие до регистрации
-BTN_ST_PRES_LN_EV	Долгое нажатие зарегистрированно
+BTN_ST_PRES_LN_EV	Долгое нажатие
 BTN_ST_NEXT_CLR		Регистрация следующего нажатия возможна
-BTN_ST_DOUBLE_EV	Очередного нажатия зарегистрированно
 	*/	
 };
 
