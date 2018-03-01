@@ -11,6 +11,7 @@ ISR(TIMER2_OVF_vect)
 {
 	TCNT2=0x70;
 	BTN_Calc(0);
+	BTN_Calc(1);
 }
 
 inline void BTN_Timer_Init(void)
@@ -30,12 +31,6 @@ inline void BTN_port_setup(void)
 {
 	BTN_DDR&= ~(BTN1|BTN2|BTN3|BTN4);
 	BTN_OUT|= (BTN1|BTN2|BTN3|BTN4);
-	
-	// for test
-	LED_DDR|= (LED1|LED2|LED3|LED4);
-	LED_OUT|= (LED1|LED2|LED3|LED4);
-	
-	
 }
 
 void BTN_Init(void)

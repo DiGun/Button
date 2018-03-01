@@ -48,16 +48,6 @@
 #define BTN_ST_NEXT_CLR		5
 #define BTN_ST_PRES_LN_EV	255
 
-
-
-//for test
-#define LED_DDR         DDRC
-#define LED_OUT			PORTC
-#define LED1			(1<<PORTC0)
-#define LED2			(1<<PORTC1)
-#define LED3			(1<<PORTC2)
-#define LED4			(1<<PORTC3)
-
 struct BTN_Data 
 {
 	volatile	uint8_t press;
