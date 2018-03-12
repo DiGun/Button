@@ -12,6 +12,8 @@ ISR(TIMER2_OVF_vect)
 	TCNT2=0x70;
 	BTN_Calc(0);
 	BTN_Calc(1);
+	BTN_Calc(2);
+	BTN_Calc(3);
 }
 
 inline void BTN_Timer_Init(void)
@@ -155,7 +157,7 @@ uint8_t BTN_Read(uint8_t n)
 		
 		case BTN_ST_PRES_EV:
 		cnt=b->press>>4;
-		PORTB=cnt;
+//		PORTB=cnt;	//debug
 		b->press&=0x0F;
 		b->state=BTN_ST_WAIT;
 		return cnt;
