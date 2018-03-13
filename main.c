@@ -33,28 +33,20 @@ uint8_t chk_zone1_off(uint8_t zn)
 {
 	if (zone[zn])
 	{
-		if (zn==0)
+		zone[zn]=0;
+		switch (zn)
 		{
+			case 0:
 			LED_OUT|=LED1|LED2;
-			zone[0]=0;
 			return 0;
-		}
-		if (zn==1)
-		{
+			case 1:
 			LED_OUT|=LED3|LED4;
-			zone[1]=0;
 			return 0;
-		}
-		if (zn==2)
-		{
+			case 2:
 			LED_OUT_ADD1|=LED5|LED6;
-			zone[2]=0;
 			return 0;
-		}
-		if (zn==3)
-		{
+			case 3:
 			LED_OUT_ADD2|=LED7|LED8;
-			zone[3]=0;
 			return 0;
 		}
 	}
@@ -71,13 +63,13 @@ int main(void)
 	LED_DDR_ADD2|= (LED7|LED8);
 	LED_OUT_ADD2|= (LED7|LED8);
 	BTN_Init();
-//	DDRB=0x0F;
-//	PORTB=0x0F;
+	//	DDRB=0x0F;
+	//	PORTB=0x0F;
 	zone[0]=0;
 	zone[1]=0;
 	zone[2]=0;
 	zone[3]=0;
-	_delay_ms(11);
+	_delay_ms(2);
 	BTN_Check();
 	for (f=0;f<4;f++)
 	{
